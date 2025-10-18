@@ -1,26 +1,38 @@
-import prisma from "../../../../lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "../../../../lib/prisma";
 
-// CORRECTED PUT function
-export async function PUT(req: NextRequest, context: { params: { id: string } }) { 
-  const { id } = context.params; 
+// PUT method
+export async function PUT(req: NextRequest) {
+  // Extract ID from URL
+  const urlParts = req.nextUrl.pathname.split("/");
+  const id = urlParts[urlParts.length - 1];
+
+  if (!id) return NextResponse.json({ error: "ID not provided" }, { status: 400 });
+
   const { title, notes, status } = await req.json();
 
-  const updatedTopic = await prisma.topic.update({
-    where: { id: id },
-    data: { title, notes, status }
-  });
-
-  return NextResponse.json(updatedTopic);
+  try {
+    const updatedTopic = await prisma.topic.update({
+      where: { id },
+      data: { title, notes, status },
+    });
+    return NextResponse.json(updatedTopic);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
-// CORRECTED DELETE function
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) { 
-  const { id } = context.params; 
+// DELETE method
+export async function DELETE(req: NextRequest) {
+  const urlParts = req.nextUrl.pathname.split("/");
+  const id = urlParts[urlParts.length - 1];
 
-  await prisma.topic.delete({
-    where: { id: id }
-  });
+  if (!id) return NextResponse.json({ error: "ID not provided" }, { status: 400 });
 
-  return NextResponse.json({ message: "Topic deleted successfully" });
+  try {
+    await prisma.topic.delete({ where: { id } });
+    return NextResponse.json({ message: "Topic deleted successfully" });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
