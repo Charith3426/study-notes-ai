@@ -1,25 +1,42 @@
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../lib/prisma";
-import { NextRequest, NextResponse } from "next/server"; // <-- CHANGED
 
-// CORRECTED PUT function
-export async function PUT(req: NextRequest, context: { params: { id: string } }) { // <-- CHANGED
-  const { id } = context.params;
+interface Params {
+  params: { id: string };
+}
+
+// GET example (optional)
+export async function GET(req: NextRequest, { params }: Params) {
+  const { id } = params;
+
+  const topic = await prisma.topic.findUnique({
+    where: { id },
+  });
+
+  if (!topic) return NextResponse.json({ error: "Topic not found" }, { status: 404 });
+
+  return NextResponse.json(topic);
+}
+
+// ✅ Correct PUT
+export async function PUT(req: NextRequest, { params }: Params) {
+  const { id } = params;
   const { title, notes, status } = await req.json();
 
   const updatedTopic = await prisma.topic.update({
-    where: { id: id },
-    data: { title, notes, status }
+    where: { id },
+    data: { title, notes, status },
   });
 
   return NextResponse.json(updatedTopic);
 }
 
-// CORRECTED DELETE function
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) { // <-- CHANGED
-  const { id } = context.params;
+// ✅ Correct DELETE
+export async function DELETE(req: NextRequest, { params }: Params) {
+  const { id } = params;
 
   await prisma.topic.delete({
-    where: { id: id }
+    where: { id },
   });
 
   return NextResponse.json({ message: "Topic deleted successfully" });
