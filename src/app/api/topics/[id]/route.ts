@@ -1,9 +1,9 @@
 import prisma from "../../../../lib/prisma";
-import { NextRequest, NextResponse } from "next/server"; // <-- IMPORT NextRequest
+import { NextRequest, NextResponse } from "next/server";
 
 // CORRECTED PUT function
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) { // <-- USE NextRequest
-  const { id } = params;
+export async function PUT(req: NextRequest, context: { params: { id: string } }) { // <-- THIS IS THE FIX
+  const { id } = context.params; // <-- THIS IS THE FIX
   const { title, notes, status } = await req.json();
 
   const updatedTopic = await prisma.topic.update({
@@ -15,8 +15,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // CORRECTED DELETE function
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) { // <-- USE NextRequest
-  const { id } = params;
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) { // <-- THIS IS THE FIX
+  const { id } = context.params; // <-- THIS IS THE FIX
 
   await prisma.topic.delete({
     where: { id: id }
