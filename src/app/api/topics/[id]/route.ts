@@ -15,7 +15,7 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
 }
 
 // DELETE /api/topics/[id] - Deletes a specific topic
-export async function DELETE(req: Request, context: { params: { id: string } }) {
+export async function DELETE(req:Request, context: { params: { id: string } }) {
   const { id } = context.params;
 
   await prisma.topic.delete({
