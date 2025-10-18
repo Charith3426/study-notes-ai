@@ -81,10 +81,10 @@ export default function Home() {
       } else {
         setAiSummary(prev => ({ ...prev, [topicId]: "Error: Could not generate summary." }));
       }
-    } } catch (error) {
+    }catch (error) {
   console.error("AI Error:", error); // <-- ADD THIS LINE
   setAiSummary(prev => ({ ...prev, [topicId]: "Error: Failed to reach AI service." }));
-    } finally {
+    }finally {
       setIsLoadingAI(null); // Stop loading
     }
   };
