@@ -1,7 +1,7 @@
 import prisma from "../../../../lib/prisma";
 import { NextResponse } from "next/server";
 
-// PUT /api/topics/[id] - Updates a specific topic
+// CORRECTED PUT function
 export async function PUT(req: Request, context: { params: { id: string } }) {
   const { id } = context.params;
   const { title, notes, status } = await req.json();
@@ -14,8 +14,8 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
   return NextResponse.json(updatedTopic);
 }
 
-// DELETE /api/topics/[id] - Deletes a specific topic
-export async function DELETE(req:Request, context: { params: { id: string } }) {
+// CORRECTED DELETE function
+export async function DELETE(req: Request, context: { params: { id: string } }) {
   const { id } = context.params;
 
   await prisma.topic.delete({
